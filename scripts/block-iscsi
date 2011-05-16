@@ -14,12 +14,12 @@ dir=$(dirname "$0")
 
 # Log which mode we are in
 logger -t block-iscsi "*** Beginning device $command ***"
- 
+
 # Fetch the iqn we specify in the domu config file
 #
 IQN=$(xenstore_read "$XENBUS_PATH/params")
 logger -t block-iscsi "IQN: ${IQN}"
- 
+
 # We define portal ip in order to support new luns which don't yet have
 # /var/lib/iscsi/node entrys yet, not dynamic but avoids manual discovery 
 #
