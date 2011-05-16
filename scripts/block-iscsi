@@ -20,7 +20,20 @@ logger -t block-iscsi "*** Beginning device ${command} ***"
 IQN=`xenstore_read "${XENBUS_PATH}/params"`
 logger -t block-iscsi "IQN: ${IQN}"
 
-# We define portal ip in order to support new luns which don't yet have
+# Check for iscsiadm and multipath
+if ! [ -x `which iscsiadm` ]; then
+  logger -t block-iscsi "No iscsiadm utility - install open-iscsi."
+  exit 1
+fi
+if ! [ -x `which multipath` ]; then
+  logger -t block-iscsi "No multipath utility - install multipath-tools."
+  # Make it fatal only if MULTIPATHING is actually enabled.
+  if [ "${MULTIPATHING}" = "true" ]; then
+    exit 1
+  fi
+fi
+
+# We define portal IP in order to support new luns which don't yet have
 # /var/lib/iscsi/node entrys yet, not dynamic but avoids manual discovery 
 #
 for PORTAL in ${PORTALS[@]}; do
