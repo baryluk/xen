@@ -13,18 +13,18 @@ dir=$(dirname "$0")
 . "$dir/block-iscsi.conf"
 
 # Log which mode we are in
-logger -t block-iscsi "*** Beginning device $command ***"
+logger -t block-iscsi "*** Beginning device ${command} ***"
 
 # Fetch the iqn we specify in the domu config file
 #
-IQN=$(xenstore_read "$XENBUS_PATH/params")
+IQN=`xenstore_read "${XENBUS_PATH}/params"`
 logger -t block-iscsi "IQN: ${IQN}"
 
 # We define portal ip in order to support new luns which don't yet have
 # /var/lib/iscsi/node entrys yet, not dynamic but avoids manual discovery 
 #
 for PORTAL in ${PORTALS[@]}; do
-  logger -t block-iscsi `iscsiadm -m discovery -t st -p "$PORTAL"`
+  logger -t block-iscsi `iscsiadm -m discovery -t st -p "${PORTAL}"`
 done
 
 # Using the iscsi node directory we can determine the ip and port of 
@@ -56,7 +56,7 @@ function get_mpath_map {
    # Now we determine which /dev/sd* device belongs to the iqn
    #
    #SCSI_DEV="/dev/`basename \`readlink /dev/disk/by-path/ip-${IP}:${PORT}-iscsi-${IQN}-lun-0\``"
-   SCSI_DEV=`readlink --canonicalize /dev/disk/by-path/ip-${IP}:${PORT}-iscsi-${IQN}-lun-0`
+   SCSI_DEV=`readlink --canonicalize "/dev/disk/by-path/ip-${IP}:${PORT}-iscsi-${IQN}-lun-0"`
    logger -t block-iscsi "scsi device: ${SCSI_DEV}"
 
    # And using the /dev/sd* device we can determine its corresponding multipath entry
