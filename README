@@ -1,0 +1,16 @@
+iscsi script for Xen
+
+Allow automatic using iSCSI targets as disks for domU on Xen/Linux.
+
+For example in your domU Xen script/configuration use:
+
+  disk = [ 'iscsi:iqn.2001-05.com.equallogic:0-8a0906-23fe93404-c82797962054a96d-examplehost,xvda,w' ]
+
+Multipath setup should also be working.
+
+Put in /etc/xen. Configure in block-iscsi.conf
+
+open-iscsi need to be installed.
+
+See http://backdrift.org/xen-block-iscsi-script-with-multipath-support
+
